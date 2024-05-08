@@ -2,7 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const port = process.env.PORT;
-// const userModel = require('./utils/user')
+const userModel = require('./utils/user')
 
 const app = express();
 
@@ -10,6 +10,8 @@ app.set("view engine", "ejs");
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
+   
+
 
 app.get("/", (req, res) => {
   res.render("home");
@@ -17,22 +19,20 @@ app.get("/", (req, res) => {
 app.get("/profile", (req, res) => {
   res.render("profile");
 });
-app.get("/create", async (req, res) => {
-  const userSchema = mongoose.Schema({
-    name: String,
-    email: String,
-    password: String,
-  });
-  let userModel = mongoose.model("user", userSchema);
-
+app.get('/signup',(req,res)=>{
+  res.render('signup')
+})
+app.post('/register', async (req,res)=>{
+  const {name, username,email,password} = req.body;
   let user = await userModel.create({
-    name: "dipu",
-    email: "dipu@gmail.com",
-    password: "dipu",
-  });
-
-  res.send("working");
-});
+    name,
+    username,
+    email,
+    password
+  })
+  res.redirect('/profile')
+ 
+})
 
 app.listen(process.env.PORT, (err) => {
   console.log("working server ");
