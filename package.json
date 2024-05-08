@@ -4,8 +4,8 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js",
-    "build:digitalocean": "npm install --production=false && npm run build && npm ci"
+    "start": "npm install node app.js",
+    "build": "npm install"
   },
   "keywords": [],
   "author": "",
