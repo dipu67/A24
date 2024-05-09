@@ -7,7 +7,7 @@ const cookieParser = require("cookie-parser");
 const port = process.env.PORT;
 const userModel = require("./utils/user");
 const postModel = require("./utils/post");
-const bot = require('./utils/bot')
+// const bot = require('./utils/bot')
 
 const app = express();
 

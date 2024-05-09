@@ -49,7 +49,6 @@ bot.onText(/\/remove/, (msg) => {
   // Send a message with the remove keyboard markup
   bot.sendMessage(chatId, "Keyboard removed.", removeKeyboardMarkup);
 }); 
-
 bot.on("message", (msg) => {
   const chatId = msg.chat.id;
   const messageId = msg.message_id;
