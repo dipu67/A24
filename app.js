@@ -21,12 +21,8 @@ app.get("/", (req, res) => {
   res.render("home");
 });
 app.get("/profile", isLoggedIn, async (req, res) => {
-  if(res.user){
-    let user = await userModel.findOne({email: req.user.email}) 
-    res.render("profile", {user});
-  }else{
-    res.redirect('/login')
-  }
+  let user = await userModel.findOne({email: req.user.email}) 
+  res.render('profile')
   
   
   
@@ -86,7 +82,7 @@ app.get("/logout", (req, res) => {
 });  
 
 function isLoggedIn(req, res, next) {
-  if (req.cookies.token ===""){
+  if (req.cookies.token === ""){
     res.redirect("/login");
   }else {
     let data = jwt.verify(req.cookies.token, "a24dev");
