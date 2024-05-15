@@ -52,7 +52,7 @@ app.post("/register", async (req, res) => {
       });
       let token = jwt.sign({ email: email, userid: user._id }, "a24dev");
       res.cookie("token", token);
-      res.send("created");
+      res.redirect("/profile");
     });
   });
 });
