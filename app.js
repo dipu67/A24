@@ -20,21 +20,28 @@ app.use(express.static("public"));
 app.get("/", (req, res) => {
   res.render("home");
 });
-app.get("/profile", isLoggedIn, (req, res) => {
-  let user = req.user
+app.get("/profile", isLoggedIn, async (req, res) => {
   
-  res.render("profile", {user:user});
+  
+  let user = await userModel.findOne({email: req.user.email})
+  
+  res.render("profile", {user});
 });
-app.get("/signup", (req, res) => {
-  res.render("signup");
+app.get("/create", (req, res) => {
+  res.render("create");
 });
-app.get("/read", async (req, res) => {
+app.get("/read/users", async (req, res) => {
   let alluser = await userModel.find();
 
   res.json(alluser);
 });
+app.get("/read/post", async (req, res) => {
+  let allpost = await postModel.find();
+
+  res.json(allpost);
+});
 app.get("/login", (req, res) => {
-  res.render("login");
+  res.render("login");  
 });
 app.post("/register", async (req, res) => {
   const { name, username, email, password } = req.body;
@@ -68,19 +75,24 @@ app.post("/login", async (req, res) => {
       res.redirect("/profile");
     } else res.redirect("/login");
   });
-});
+});  
 app.get("/logout", (req, res) => {
   res.cookie("token", "");
   res.redirect("/login");
-});
+});  
 
 function isLoggedIn(req, res, next) {
-  if (req.cookies.token === "") res.redirect("/login");
-  else {
+  if (req.cookies.token ===""){
+    console.log('no cookie')
+    res.redirect("/login");
+    next(); 
+  }else {
     let data = jwt.verify(req.cookies.token, "a24dev");
     req.user = data;
+    console.log("cookie working");
+    next();  
   }
-  next();
+  
 }
  
 app.listen(process.env.PORT, (err) => {
