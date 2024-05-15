@@ -83,16 +83,12 @@ app.get("/logout", (req, res) => {
 
 function isLoggedIn(req, res, next) {
   if (req.cookies.token ===""){
-    console.log('no cookie')
     res.redirect("/login");
-    next(); 
   }else {
     let data = jwt.verify(req.cookies.token, "a24dev");
-    req.user = data;
-    console.log("cookie working");
-    next();  
+    req.user = data;  
   }
-  
+  next()
 }
  
 app.listen(process.env.PORT, (err) => {
