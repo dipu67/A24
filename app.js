@@ -21,11 +21,9 @@ app.get("/", (req, res) => {
   res.render("home");
 });
 app.get("/profile", isLoggedIn, async (req, res) => {
-  let user = await userModel.findOne({email: req.user.email}) 
-  res.render('profile')
+  // let user = await userModel.findOne({email: req.user.email})
   
-  
-  
+  res.render("profile", ); 
 });
 app.get("/create", (req, res) => {
   res.render("create");
@@ -72,23 +70,22 @@ app.post("/login", async (req, res) => {
     if (result) {
       let token = jwt.sign({ email: email, userid: user._id }, "a24dev");
       res.cookie("token", token);
-      res.redirect("/profile"); 
+      res.redirect("/profile");
     } else res.redirect("/login");
   });
-});  
+});
 app.get("/logout", (req, res) => {
   res.cookie("token", "");
   res.redirect("/login");
-});  
+});
 
 function isLoggedIn(req, res, next) {
-  if (req.cookies.token === ""){
-    res.redirect("/login");
-  }else {
+  if (req.cookies.token ==="") res.redirect("/login");
+  else {
     let data = jwt.verify(req.cookies.token, "a24dev");
-    req.user = data;  
+    req.user = data;
   }
-  next()
+  next(); 
 }
  
 app.listen(process.env.PORT, (err) => {
