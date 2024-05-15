@@ -1,8 +1,9 @@
 const mongoose = require("mongoose");
+require("dotenv").config();
 
 // Connect to MongoDB Atlas
 mongoose.connect(process.env.DATABASE).then(() => {
-  console.log("connected");
+  console.log("connected User");
 });
 
 const userSchema = mongoose.Schema({
@@ -11,7 +12,7 @@ const userSchema = mongoose.Schema({
   email: String,
   password: String,
   posts:[
-    {type: mongoose.Schema.Types.ObjectId,ref:"post"}
+    {type:mongoose.Schema.Types.ObjectId,ref:"post"}
   ]
 });
 

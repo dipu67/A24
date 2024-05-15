@@ -1,4 +1,4 @@
-require("dotenv").config();
+
 const express = require("express");
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
@@ -82,7 +82,7 @@ function isLoggedIn(req, res, next) {
   }
   next();
 }
-
+ 
 app.listen(process.env.PORT, (err) => {
   console.log("working server ");
 });
