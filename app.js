@@ -21,11 +21,15 @@ app.get("/", (req, res) => {
   res.render("home");
 });
 app.get("/profile", isLoggedIn, async (req, res) => {
+  if(res.user){
+    let user = await userModel.findOne({email: req.user.email}) 
+    res.render("profile", {user});
+  }else{
+    res.redirect('/login')
+  }
   
   
-  let user = await userModel.findOne({email: req.user.email})
   
-  res.render("profile", {user});
 });
 app.get("/create", (req, res) => {
   res.render("create");
@@ -72,7 +76,7 @@ app.post("/login", async (req, res) => {
     if (result) {
       let token = jwt.sign({ email: email, userid: user._id }, "a24dev");
       res.cookie("token", token);
-      res.redirect("/profile");
+      res.redirect("/profile"); 
     } else res.redirect("/login");
   });
 });  
