@@ -39,7 +39,7 @@ app.get("/post", isLoggedIn, async(req, res) => {
   res.render("post",{post});
 });
  
-app.get("/create", (req, res) => {
+app.get("/create",alreadyLoggedIn, (req, res) => {
   res.render("create");
 });
 app.get("/read/users", async (req, res) => {
@@ -128,6 +128,13 @@ function isLoggedIn(req, res, next) {
     req.user = user; // Attach user info to request object
     next();
   });
+}
+
+function alreadyLoggedIn(req,res,next){
+  if(req.cookies.token){
+    res.redirect('/profile')
+  }
+  next()
 }
 
 app.listen(process.env.PORT, (err) => {
