@@ -60,6 +60,15 @@ nav {
     background-color: rgba(0, 128, 0, 0.397);
     backdrop-filter: blur(5px);
 }
+#loginBtn{
+    margin: 5px;
+}
+#loginBtn a{
+    text-decoration: none;
+    padding: 10px 20px;
+    font-size: 20px;
+    background-color: lightblue;
+}
 
 i {
     font-size: 40px;
@@ -79,9 +88,8 @@ i {
         position: absolute;
         display: none;
         height: calc(100% - 50px);
-        ;
         width: 60%;
-        background-color: rgba(255, 255, 255, 0.418);
+        background-color: rgba(255, 255, 255, 0.521);
         backdrop-filter: blur(5px);
         top: 50px;
         right: 0px;

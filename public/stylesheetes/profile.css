@@ -1,0 +1,110 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+html,body{
+    width: 100%;
+    height: 100%;
+}
+#main{
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: rgba(0, 0, 0, 0.425);
+}
+#profile{
+    position: relative;
+    display: inline-block;
+    height: 40%;
+    width: 100%;
+    /* background-color: red; */
+}
+#profileBackground{
+    width: 100%;
+    height: 50%;
+    
+}
+#profileBackground img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    
+}
+#profileImage{
+    position: absolute ;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80px;
+    height: 80px;
+    margin-bottom: 80px;
+}
+#profileImage img{
+    border: 2px solid green;
+    border-radius: 50%;
+    width: 100%;
+    height: 100%;
+}
+#name{
+    font-size: 20px;
+}
+#userName{
+    font-size: 20px;
+}
+
+.tab-container {
+    width: 100%;
+    width: 100%;
+    margin: 20px auto;
+}
+
+.tabs {
+    display: flex;
+    overflow-x: auto;
+    white-space: nowrap;
+    border-bottom: 2px solid #ccc;
+}
+
+.tab {
+    padding: 10px 20px;
+    cursor: pointer;
+    border: none;
+    background: none;
+    outline: none;
+    transition: background 0.3s ease;
+    flex-shrink: 0;
+}
+
+.tab:hover {
+    background-color: #f1f1f1;
+    border-radius: 10px;
+}
+
+.tab.active {
+    border-bottom: 2px solid #007BFF;
+    color: #007BFF;
+}
+
+.tab-content {
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-top: none;
+    overflow: auto;
+    
+}
+
+.tab-panel {
+    display: none;
+    height: 100vh;
+    width: 100vw;
+   
+}
+
+.tab-panel.active {
+    display: block;
+}
+#tab1 p{
+    margin: 5px;
+}

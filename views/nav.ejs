@@ -26,27 +26,14 @@
                 <li><a href="/post">Post </a></li>
                 <li><a href="#">Chat </a></li>
                 <li><a href="#">More Soon</a></li>
+                <div id="loginBtn">
+                    <a href="/create"> Login</a>
+                </div>
             </ul>
         </div>
         <i class="ri-menu-line"></i>
     </nav>
-
-    <script>
-        const nav = document.querySelector('#rightNav')
-        const icon = document.querySelector('i')
-        let toogle = true
-        icon.addEventListener('click', () => {
-            if (toogle === true) {
-                nav.style.display = 'block'
-                toogle = false
-            } else if (toogle === false) {
-                nav.style.display = 'none'
-                toogle = true
-
-            }
-
-        })
-    </script>
+    <script src="/javascripts/nav.js"></script>
 </body>
 
 </html>

@@ -20,6 +20,9 @@ app.use(express.static("public"));
 app.get("/", (req, res) => {
   res.render("home");
 });
+app.get("/notcoin", (req, res) => {
+  res.render("notcoin");
+});
 app.get("/profile", isLoggedIn, async (req, res) => {
   if (req.user) {
     let user = await userModel.findOne({ email: req.user.email });
