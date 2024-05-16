@@ -32,13 +32,14 @@
 
         .background-image {
             width: 100px;
-          
+
         }
-        .background-image img{
+
+        .background-image img {
             width: 100%;
             height: 100%;
-           
-          
+
+
         }
 
         .content {
@@ -47,7 +48,7 @@
 
         h1 {
             font-size: 40px;
-          
+
         }
 
         .countdown {
@@ -70,7 +71,11 @@
         .label {
             font-size: 1.2rem;
         }
-        #cex a{
+
+        #cex a {
+            font-size: 60px;
+            text-decoration: none;
+            color: aqua;
 
             font-size: 30px;
             margin: 5px;
@@ -116,33 +121,33 @@
     </div>
     <script>
         // scripts.js
-document.addEventListener('DOMContentLoaded', function() {
-    function updateCountdown() {
-        const eventTime = new Date();
-        eventTime.setHours(18, 0, 0, 0); // Today at 6 PM
+        document.addEventListener('DOMContentLoaded', function () {
+            function updateCountdown() {
+                const eventTime = new Date();
+                eventTime.setHours(18, 0, 0, 0); // Today at 6 PM
 
-        const now = new Date();
-        const timeDifference = eventTime - now;
+                const now = new Date();
+                const timeDifference = eventTime - now;
 
-        if (timeDifference < 0) {
-            document.getElementById('countdown').innerHTML = '<h2>The event has started!</h2>';
-            return;
-        }
+                if (timeDifference < 0) {
+                    document.getElementById('countdown').innerHTML = '<h2>The event has started!</h2>';
+                    return;
+                }
 
-        const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((timeDifference % (1000 * 60)) / 1000);
+                const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((timeDifference % (1000 * 60)) / 1000);
 
-        document.getElementById('days').textContent = days;
-        document.getElementById('hours').textContent = hours;
-        document.getElementById('minutes').textContent = minutes;
-        document.getElementById('seconds').textContent = seconds;
-    }
+                document.getElementById('days').textContent = days;
+                document.getElementById('hours').textContent = hours;
+                document.getElementById('minutes').textContent = minutes;
+                document.getElementById('seconds').textContent = seconds;
+            }
 
-    setInterval(updateCountdown, 1000);
-    updateCountdown();
-});
+            setInterval(updateCountdown, 1000);
+            updateCountdown();
+        });
 
 
     </script>
