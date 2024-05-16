@@ -7,10 +7,10 @@ mongoose.connect(process.env.DATABASE).then(() => {
 });  
 
 const postSchema = mongoose.Schema({
-  user:{
+  user:[{
     type:mongoose.Schema.Types.ObjectId,
     ref:"user"
-  },
+  }],
   date: {type:Date,default:Date.now},
   content: String,
   likes:[

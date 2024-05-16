@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/stylesheetes/post.css">
+    <title>A24 | Post</title>
+</head>
+<body>
+    <%- include('nav') %>
+    <div class="container">
+        <button id="postButton">Post</button>
+    </div>
+    
+    <div id="postModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <form action="/posts" method="post"  id="postForm">
+                <textarea id="postContent" placeholder="Enter your post here" name="data"></textarea>
+                <input type="submit" value="Submit">
+            </form>
+        </div>
+    </div>
+
+    <div id="postContainer">
+        <% post.forEach(function(post){%>
+        <div id="post">
+        <div id="userData">
+            <%post.user.forEach(function(user){%>
+
+                <h1> <%=user.username%></h1>
+            <%})%>
+
+        </div>
+        <div id="userContaint">
+            <h1>
+                <%= post.content%>
+
+            </h1>
+
+        </div>
+    <%}) %>
+</div>
+    </div>
+    <script src="/javascripts/post.js"></script>
+</body>
+</html>

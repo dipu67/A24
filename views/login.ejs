@@ -4,26 +4,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Account</title>
-    <style>
-        form{
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-            /* width: 50%; */
-            /* justify-content: center; */
-            align-items: center;
-        }
-    </style>
+    <link rel="stylesheet" href="/stylesheetes/login.css">
 </head>
 <body>
-    <form action="/login" method="post" >
-       
-        <label for="email">Enter Your email</label>
-        <input type="email" name="email" id="email">
-        <label for="password">Enter Your Password</label>
-        <input type="password" name="password" id="password">
-        <input type="submit" value="Login Account">
-    </form>
+    <div id="main">
+        <div id="formContainer">
+            <div id="formText">
+                Login Account
+            </div>
+            
+            <form action="/register" method="post" id="form" >
+                <input type="email" placeholder="Enter Your Email" name="email" id="email" class="input" required>
+                <input type="password" placeholder="Enter Your Password" name="password" id="password" class="input" required>
+                <input type="submit" value="Login Account" id="btn">
+                <div id="create">
+                    <a href="/create">don't have an account? Create Account</a>
+                </div>
+            </form>
+        </div>
+    </div>
 
 </body>
 </html>

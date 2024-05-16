@@ -1,0 +1,101 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  html,
+  body {
+    width: 100%;
+    height: 100%;
+  }
+  #main {
+    height: 100%;
+    width: 100%;
+    background: #dde1e7;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  #formContainer {
+      position: relative;
+    display: flex;
+    /* justify-content: center; */
+    flex-direction: column;
+    align-items: center;
+    border-radius: 15px;
+    width: 500px;
+    height:400px;
+    box-shadow: -3px -3px 7px #ffffff73, 2px 2px 5px rgba(94, 104, 121, 0.288);
+  }
+  #formText {
+     
+    color: #595959;
+    padding: 15px;
+    font-size: 24px;
+  }
+  #form {
+      width: 100%;
+      height: 100%;
+    display: flex;
+    align-items: center;
+    /* justify-content: start; */
+    flex-direction: column;
+    /* padding: 20px; */
+  
+  }
+  .input {
+    padding: 10px;
+    margin: 5px;
+    outline: none;
+    border: none;
+    padding-left: 10px;
+    border-radius: 10px;
+    font-size: 20px;
+    background: #dde1e7;
+    color: #595959;
+    box-shadow: inset 2px 2px 5px #babecc, inset -5px -5px 10px #ffffff73;
+  }
+  .input:focus {
+    background-color: rgba(255, 255, 255, 0.356);
+  }
+ 
+  #btn {
+    margin: 10px 0;
+    width: 90%;
+    height: 50px;
+    font-size: 18px;
+    line-height: 50px;
+    font-weight: 600;
+    background: #dde1e7;
+    border-radius: 25px;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    color: #595959;
+    box-shadow: 2px 2px 5px #babecc, -5px -5px 10px #ffffff73;
+  }
+  #btn:focus {
+    color: #3498db;
+    box-shadow: inset 2px 2px 5px #babecc, inset -5px -5px 10px #ffffff73;
+  }
+  #create {
+    padding-left: 10px;
+    color: #595959;
+    font-size: 16px;
+    margin-top: 15px;
+  }
+  
+  #create a {
+    color: #3498db;
+    text-decoration: none;
+    font-size: 15px;
+  }
+  #create a:hover {
+    text-decoration: underline;
+  }
+  @media screen and (max-width: 600px) {
+    #formContainer {
+      width: 90%;
+    }
+  }
+  

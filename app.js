@@ -1,4 +1,4 @@
-
+require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
@@ -21,10 +21,24 @@ app.get("/", (req, res) => {
   res.render("home");
 });
 app.get("/profile", isLoggedIn, async (req, res) => {
-  // let user = await userModel.findOne({email: req.user.email})
-  
-  res.render("profile", ); 
+  if (req.user) {
+    let user = await userModel.findOne({ email: req.user.email });
+    user.populate('posts')
+    res.render("profile", { user });
+  } else {
+    res.redirect("/login");
+  }
 });
+app.get("/post", isLoggedIn, async(req, res) => {
+
+  let post = await postModel.find().populate('user')
+
+  // post.populate('user')
+  // console.log(post);
+
+  res.render("post",{post});
+});
+ 
 app.get("/create", (req, res) => {
   res.render("create");
 });
@@ -39,12 +53,12 @@ app.get("/read/post", async (req, res) => {
   res.json(allpost);
 });
 app.get("/login", (req, res) => {
-  res.render("login");  
+  res.render("login");
 });
 app.post("/register", async (req, res) => {
   const { name, username, email, password } = req.body;
   let user = await userModel.findOne({ email });
-  if (user) return res.redirect("/signup");
+  if (user) return res.redirect("/create");
 
   bcrypt.genSalt(10, (err, salt) => {
     bcrypt.hash(password, salt, async (err, hash) => {
@@ -55,7 +69,10 @@ app.post("/register", async (req, res) => {
         email,
         password: hash,
       });
-      let token = jwt.sign({ email: email, userid: user._id }, "a24dev");
+      let token = jwt.sign(
+        { email: email, userid: user._id },
+        process.env.SECRETKEY
+      );
       res.cookie("token", token);
       res.redirect("/profile");
     });
@@ -68,26 +85,51 @@ app.post("/login", async (req, res) => {
 
   bcrypt.compare(password, user.password, (err, result) => {
     if (result) {
-      let token = jwt.sign({ email: email, userid: user._id }, "a24dev");
+      let token = jwt.sign(
+        { email: email, userid: user._id },
+        process.env.SECRETKEY
+      );
       res.cookie("token", token);
       res.redirect("/profile");
     } else res.redirect("/login");
   });
 });
+app.post("/posts", isLoggedIn, async (req, res) => {
+  const { data } = req.body;
+  let user = await userModel.findOne({ email: req.user.email });
+  user.populate('posts')
+
+
+  let post = await postModel.create({
+    user: user._id,
+    content: data,
+  });
+  user.posts.push(post._id)
+  await user.save()
+  res.redirect("/post");
+});
 app.get("/logout", (req, res) => {
-  res.cookie("token", "");
+  res.cookie("token", "", { expires: new Date(0) });
   res.redirect("/login");
 });
-
-function isLoggedIn(req, res, next) {
-  if (req.cookies.token ==="") res.redirect("/login");
-  else {
-    let data = jwt.verify(req.cookies.token, "a24dev");
-    req.user = data;
-  }
-  next(); 
-}
  
+function isLoggedIn(req, res, next) {
+  const authHeader = req.cookies.token;
+  // const token = authHeader && authHeader.split(" ")[1];
+
+  if (!authHeader) {
+    return res.status(401).redirect("/login");
+  }
+
+  jwt.verify(authHeader, process.env.SECRETKEY, (err, user) => {
+    if (err) {
+      return res.status(403).json({ message: "Invalid or expired JWT" });
+    }
+    req.user = user; // Attach user info to request object
+    next();
+  });
+}
+
 app.listen(process.env.PORT, (err) => {
   console.log("working server ");
 });
