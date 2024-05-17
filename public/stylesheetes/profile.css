@@ -108,3 +108,14 @@ html,body{
 #tab1 p{
     margin: 5px;
 }
+#editProfile button{
+    font-size: 15px;
+    background-color: transparent;
+    border-radius: 10px;
+    padding: 5px 2px;
+    cursor: pointer;
+}
+#editProfile button a{
+    text-decoration: none;
+    color: rgba(255, 255, 255, 0.582);
+}

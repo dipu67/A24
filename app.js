@@ -20,8 +20,8 @@ app.use(express.static("public"));
 app.get("/", (req, res) => {
   res.render("home");
 });
-app.get("/notcoin", (req, res) => {
-  res.render("notcoin");
+app.get("/editprofile", (req, res) => {
+  res.render("editprofile");
 });
 app.get("/profile", isLoggedIn, async (req, res) => {
   if (req.user) {

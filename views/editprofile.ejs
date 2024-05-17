@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A24 | Edit Profile</title>
+    <link rel="stylesheet" href="/stylesheetes/editprofile">
+</head>
+<body>
+    <div id="main">
+        <%- include('nav') %>
+        <div id="updateData">
+            <div>
+                Update Your Profile
+            </div>
+            <div id="uplodProfile">
+                <form action="/upload" method="post" enctype="multipart/form-data">
+                    <input type="file" name="profilePic" id="profilePic">
+                </form>
+            </div>
+
+        </div>
+
+    </div>
+</body>
+</html>
