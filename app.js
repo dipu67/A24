@@ -48,7 +48,7 @@ app.get("/post", isLoggedIn, async(req, res) => {
   let post = await postModel.find().populate('user')
 
   // post.populate('user')
-  // console.log(post);
+  console.log(user);
 
   res.render("post",{post,user});
 });
