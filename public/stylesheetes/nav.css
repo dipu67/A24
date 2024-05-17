@@ -93,6 +93,7 @@ i {
         backdrop-filter: blur(5px);
         top: 50px;
         right: 0px;
+        z-index: 999;
     }
 
     #rightNav ul {

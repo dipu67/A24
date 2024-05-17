@@ -30,7 +30,7 @@
     /* margin: 20% auto; */
     padding: 20px;
     border: 1px solid #888;
-    width: 50%;
+    /* width: 50%; */
 }
 
 .close {
@@ -61,6 +61,8 @@
 #postForm textarea{
     background-color: rgba(0, 0, 0, 0.582);
     color: white;
+    width: 100%;
+    height: 200px;
 }
 #postForm textarea[placeholder]{
     padding: 5px;
@@ -75,18 +77,67 @@
 #postContainer{
     width: 100%;
     height: 100%;
+    
 }
 #post{
-    margin-top: 5px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-direction: column;
-    border: 2px solid black;
-    width: 30vw;
-    height: 30vh;
-    padding: 5px;
-    gap: 5px;
+    width: auto;
     margin: 10px;
+    height: auto;
+    /* position: relative; */
+    display: flex;
+    /* align-items: center; */
+    justify-content: center;
+    margin-top: 5px;
+    border: 1px solid black;
+    padding-bottom: 10px;
     
+
+}
+#userpic{
+    /* position: absolute; */
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin: 5px;
+}
+#userpic img{
+   width: 100%;
+   height: 100%;
+   object-fit: cover;
+   object-position: center;
+   border-radius: 50%;
+}
+#postContaint{
+    width: 80%;
+    
+
+}
+#userInfo{
+    height: 65px;
+    margin: 5px 0 0 10px;
+}
+#postData{
+    margin-left: 10px;
+}
+#postText{
+    font-size: 20px;
+}
+#name{
+    font-size: 24px;
+}
+#userName{
+    font-size: 15px;
+}
+#time{
+    font-size: 8px;
+}
+#raction{
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 5px;
+    margin-top: 5px;
+}
+#raction button{
+    background: transparent;
+    border: none;
 }

@@ -1,47 +1,76 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/stylesheetes/post.css">
     <title>A24 | Post</title>
 </head>
+
 <body>
     <%- include('nav') %>
-    <div class="container">
-        <button id="postButton">Post</button>
-    </div>
-    
-    <div id="postModal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <form action="/posts" method="post"  id="postForm">
-                <textarea id="postContent" placeholder="Enter your post here" name="data"></textarea>
-                <input type="submit" value="Submit">
-            </form>
+        <div class="container">
+            <button id="postButton">Post</button>
         </div>
-    </div>
 
-    <div id="postContainer">
-        <% post.reverse().forEach(function(post){%>
-        <div id="post">
-        <div id="userData">
-            <%post.user.forEach(function(user){%>
+        <div id="postModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <form action="/posts" method="post" id="postForm">
+                    <textarea id="postContent" placeholder="Enter your post here" name="data"></textarea>
+                    <input type="submit" value="Post">
+                </form>
+            </div>
+        </div>
 
-                <h1> <%=user.username%></h1>
-            <%})%>
+        <div id="postContainer">
+            <% post.reverse().forEach(function(post){%>
+                <div id="post">
+                    <div id="userpic">
+                        <img src="/profile/<%= user.profilepic %>" alt="profile">
+
+                    </div>
+                    <div id="postContaint">
+                        <div id="userInfo">
+                            <%post.user.forEach(function(user){%>
+                                <div id="name">
+                                    <%=user.name%>
+                                </div>
+                                <div id="userName">
+                                    @<%=user.username%>
+                                </div>
+                                <div id="time">
+                                    1 hour ago
+                                </div>
+                                <%})%>
+
+                        </div>
+                        <div id="postData">
+
+                            <div id="postText">
+                                <%= post.content%>
+
+                            </div>
+
+                            <div id="postimage">
+
+                            </div>
+                            <div id="raction">
+                                <button> Like</button>
+                                <button> Comment</button>
+                                <button> Share</button>
+                            </div>
+
+
+                        </div>
+
+                    </div>
+                </div>
+                <%}) %>
 
         </div>
-        <div id="userContaint">
-            <h1>
-                <%= post.content%>
-
-            </h1>
-
-        </div>
-    <%}) %>
-</div>
-    </div>
-    <script src="/javascripts/post.js"></script>
+        <script src="/javascripts/post.js"></script>
 </body>
+
 </html>

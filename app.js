@@ -8,6 +8,7 @@ const port = process.env.PORT;
 const userModel = require("./utils/user");
 const postModel = require("./utils/post");
 // const bot = require('./utils/bot')
+// const upload = require('./utils/multer')
 
 const app = express();
 
@@ -23,6 +24,14 @@ app.get("/", (req, res) => {
 app.get("/editprofile", (req, res) => {
   res.render("editprofile");
 });
+app.post("/upload", isLoggedIn,upload.single('profilePic'), async (req, res) => {
+  let user = await userModel.findOne({ email: req.user.email });
+  user.profilepic = req.file.filename;
+  user.save()
+  res.redirect('/profile')
+
+  
+});
 app.get("/profile", isLoggedIn, async (req, res) => {
   if (req.user) {
     let user = await userModel.findOne({ email: req.user.email });
@@ -34,12 +43,14 @@ app.get("/profile", isLoggedIn, async (req, res) => {
 });
 app.get("/post", isLoggedIn, async(req, res) => {
 
+  let user = await userModel.findOne({email:req.user.email})
+
   let post = await postModel.find().populate('user')
 
   // post.populate('user')
   // console.log(post);
 
-  res.render("post",{post});
+  res.render("post",{post,user});
 });
  
 app.get("/create",alreadyLoggedIn, (req, res) => {

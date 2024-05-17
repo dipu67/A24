@@ -4,23 +4,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>A24 | Edit Profile</title>
-    <link rel="stylesheet" href="/stylesheetes/editprofile">
+    <link rel="stylesheet" href="/stylesheetes/editprofile.css">
 </head>
 <body>
     <div id="main">
         <%- include('nav') %>
-        <div id="updateData">
-            <div>
-                Update Your Profile
-            </div>
-            <div id="uplodProfile">
-                <form action="/upload" method="post" enctype="multipart/form-data">
-                    <input type="file" name="profilePic" id="profilePic">
-                </form>
+        <div id="updateDataContainer">
+
+            <div id="updateData">
+                <div class="title">
+                    Update Your Profile
+                </div>
+                <div id="uplodProfile">
+                    <form action="/upload" method="post" enctype="multipart/form-data">
+                        <input type="file" name="profilePic" id="profilePic">
+                        <input type="submit" value="Update">
+                    </form>
             </div>
 
         </div>
-
+    </div> 
+        
     </div>
 </body>
 </html>
