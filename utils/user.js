@@ -2,11 +2,9 @@ const mongoose = require("mongoose");
 require("dotenv").config();
 
 // Connect to MongoDB Atlas
-const mongoUri = process.env.DATABASE;
-console.log(mongoUri);
-mongoose.connect(mongoUri)
-.then(() => console.log('MongoDB connection established'))
-.catch(err => console.error('MongoDB connection error:', err));
+mongoose.connect(process.env.DATABASE).then(() => {
+  console.log("connected User");
+});
 
 const userSchema = mongoose.Schema({
   name: String,
