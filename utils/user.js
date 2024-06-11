@@ -3,7 +3,8 @@ require("dotenv").config();
 
 // Connect to MongoDB Atlas
 const mongoUri = process.env.DATABASE;
-mongoose.connect(mongoUri, { useNewUrlParser: true, useUnifiedTopology: true })
+console.log(mongoUri);
+mongoose.connect(mongoUri)
 .then(() => console.log('MongoDB connection established'))
 .catch(err => console.error('MongoDB connection error:', err));
 
