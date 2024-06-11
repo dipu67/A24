@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A24 | Chat</title>
+    <link rel="stylesheet" href="/stylesheetes/chat.css">
+    <script src="/socket.io/socket.io.js"></script>
+
+<body>
+    <div id="main">
+
+        <div class="chat-container">
+            <div class="sidebar">
+                <h2>Users</h2>
+                <ul id="user-list">
+                    <!-- List of users will be dynamically populated here -->
+                </ul>
+            </div>
+            <div class="chat-area">
+                <div id="messages" class="messages">
+                    <!-- Messages will be dynamically populated here -->
+
+                    <ul id="msgList">
+                            <% messages.forEach(function(message) { %>
+
+                                <% message.user.forEach(function(user){%>
+                            <li class="<% if(user.username)? ".sent" : """>
+                                    <p>
+                                        <%=user.name %>:
+                                    </p>
+                                    <%})%>
+                                        <p>
+                                            <%= message.message %>
+                                        </p>
+                            </li>
+                            <% }) %>
+                        </ul>
+                        
+                </div>
+                <form id="message-form" class="message-form">
+                    <input id="message-input" name="message" type="text" placeholder="Type a message" autocomplete="off"
+                        required />
+                    <button type="submit" id="submit">Send</button>
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="/javascripts/chat.js"></script>
+</body>
+
+</html>

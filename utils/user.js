@@ -12,9 +12,12 @@ const userSchema = mongoose.Schema({
   email: String,
   password: String,
   profilepic:{
-    type:String,
-    default:'profile.png'
+    data:Buffer,
+    contentType:String
   },
+  chats:[
+    {type:mongoose.Schema.Types.ObjectId,ref:"chat"}
+  ],
   posts:[
     {type:mongoose.Schema.Types.ObjectId,ref:"post"}
   ]
