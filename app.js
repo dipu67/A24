@@ -33,8 +33,9 @@ const domain = 'https://a24.fun'
 app.get("/", (req, res) => {
   res.render("home");
 });
-app.post(`/bot${token}`, async (req,res)=>{
+app.post(`/`, async (req,res)=>{
   const message = req.body.message
+  console.log(req.body);
   if(message){
     const chatId = message.chat.id
 
@@ -43,19 +44,7 @@ app.post(`/bot${token}`, async (req,res)=>{
   res.sendStatus(200)
 
   // Set up the webhook with Telegram
-axios.post(`https://api.telegram.org/bot${token}/setWebhook`, {
-  url: `${domain}/bot${token}`
-})
-.then(response => {
-  if (response.data.ok) {
-    console.log('Webhook set successfully');
-  } else {
-    console.error('Error setting webhook:', response.data);
-  }
-})
-.catch(error => {
-  console.error('Error setting webhook:', error);
-});
+
 })
 app.get("/editprofile", (req, res) => {
   res.render("editprofile");
