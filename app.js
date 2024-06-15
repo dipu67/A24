@@ -7,12 +7,15 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
 const fs = require('fs')
+const axios = require('axios')
 const port = process.env.PORT;
 const userModel = require("./utils/user");
 const postModel = require("./utils/post");
 const chatModel = require("./utils/chat");
 // const bot = require('./utils/bot')
-const upload = require('./utils/multer')
+const upload = require('./utils/multer');
+
+
 
 const app = express();
 const server = http.createServer(app);
@@ -23,10 +26,37 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static("public"));
+
+const token = process.env.TOKEN
+const domain = 'https://a24.fun'
  
 app.get("/", (req, res) => {
   res.render("home");
 });
+app.post(`/bot${token}`, async (req,res)=>{
+  const message = req.body.message
+  if(message){
+    const chatId = message.chat.id
+
+    await axios.post(`https://api.telegram.org/bot${token}/sendMessage`,{chat_id:chatId, text:"hey"})
+  }
+  res.sendStatus(200)
+
+  // Set up the webhook with Telegram
+axios.post(`https://api.telegram.org/bot${token}/setWebhook`, {
+  url: `${domain}/bot${token}`
+})
+.then(response => {
+  if (response.data.ok) {
+    console.log('Webhook set successfully');
+  } else {
+    console.error('Error setting webhook:', response.data);
+  }
+})
+.catch(error => {
+  console.error('Error setting webhook:', error);
+});
+})
 app.get("/editprofile", (req, res) => {
   res.render("editprofile");
 });
@@ -168,6 +198,7 @@ app.post("/posts", isLoggedIn, async (req, res) => {
   await user.save();
   res.redirect("/post");
 });
+
 app.get("/logout", (req, res) => {
   res.cookie("token", "", { expires: new Date(0) });
   res.redirect("/login");
@@ -199,4 +230,4 @@ function alreadyLoggedIn(req, res, next) {
 
 server.listen(process.env.PORT, (err) => {
   console.log("working server ");
-});
+})
