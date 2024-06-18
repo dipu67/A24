@@ -35,6 +35,7 @@ app.get("/", (req, res) => {
 });
 app.post(`/bot${BOT_TOKEN}`, (req, res) => {
   const { message } = req.body;
+  console.log(req.body);
 
   if (message) {
       const chatId = message.chat.id;
