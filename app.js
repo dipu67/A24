@@ -12,7 +12,7 @@ const port = process.env.PORT;
 const userModel = require("./utils/user");
 const postModel = require("./utils/post");
 const chatModel = require("./utils/chat");
-const setWebhook = require('./utils/setWebHook')
+// const setWebhook = require('./utils/setWebHook')
 const upload = require('./utils/multer');
 
 
@@ -28,7 +28,6 @@ app.use(cookieParser());
 app.use(express.static("public"));
 
 const BOT_TOKEN = process.env.TOKEN
-const domain = 'https://a24.fun'
  
 app.get("/", (req, res) => {
   res.render("home");
