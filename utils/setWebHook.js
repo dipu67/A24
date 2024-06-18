@@ -3,7 +3,7 @@
 const axios = require('axios');
 
 const BOT_TOKEN = process.env.PORT; // Replace with your bot token
-const WEBHOOK_URL = 'http://localhost:3000/' + BOT_TOKEN; // Replace with your HTTPS URL
+const WEBHOOK_URL = 'http://a24.fun/bot' + BOT_TOKEN; // Replace with your HTTPS URL
 
 // Function to set the webhook
 async function setWebhook() {

@@ -27,25 +27,44 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static("public"));
 
-const token = process.env.TOKEN
+const BOT_TOKEN = process.env.TOKEN
 const domain = 'https://a24.fun'
  
 app.get("/", (req, res) => {
   res.render("home");
 });
-app.post(`/`, async (req,res)=>{
-  const message = req.body.message
-  console.log(req.body);
-  if(message){
-    const chatId = message.chat.id
+app.post(`/bot${BOT_TOKEN}`, (req, res) => {
+  const { message } = req.body;
 
-    await axios.post(`https://api.telegram.org/bot${token}/sendMessage`,{chat_id:chatId, text:"hey"})
+  if (message) {
+      const chatId = message.chat.id;
+      const text = message.text;
+
+      // Echo back the received message
+      sendTextMessage(chatId, `You said: ${text}`)
+          .then(() => {
+              console.log(`Message sent to ${chatId}: ${text}`);
+              res.sendStatus(200);
+          })
+          .catch(error => {
+              console.error('Error sending message:', error);
+              res.sendStatus(500);
+          });
+  } else {
+      res.sendStatus(200);
   }
-  res.sendStatus(200)
+});
 
-  // Set up the webhook with Telegram
+// Function to send a text message
+function sendTextMessage(chatId, text) {
+  return axios.post(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+      chat_id: chatId,
+      text: text
+  });
+}
 
-})
+
+
 app.get("/editprofile", (req, res) => {
   res.render("editprofile");
 });
