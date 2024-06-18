@@ -35,7 +35,6 @@ app.get("/", (req, res) => {
 });
 app.post(`/bot${BOT_TOKEN}`, (req, res) => {
   const { message } = req.body;
-  console.log(req.body);
 
   if (message) {
       const chatId = message.chat.id;
@@ -55,6 +54,8 @@ app.post(`/bot${BOT_TOKEN}`, (req, res) => {
       res.sendStatus(200);
   }
 });
+
+
 
 // Function to send a text message
 function sendTextMessage(chatId, text) {
