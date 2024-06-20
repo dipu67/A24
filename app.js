@@ -6,89 +6,123 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
-const fs = require('fs')
-const axios = require('axios')
+const fs = require("fs");
+const axios = require("axios");
 const port = process.env.PORT;
 const userModel = require("./utils/user");
 const postModel = require("./utils/post");
 const chatModel = require("./utils/chat");
-// const setWebhook = require('./utils/setWebHook')
-const upload = require('./utils/multer');
-
-
+const setWebhook = require("./utils/setWebHook");
+const upload = require("./utils/multer");
+// const TelegramBot = require('node-telegram-bot-api')
 
 const app = express();
 const server = http.createServer(app);
-const io = socket(server); 
+const io = socket(server);
 
 app.set("view engine", "ejs");
-app.use(express.json()); 
+app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static("public"));
+const BOT_TOKEN = process.env.TOKEN;
 
-const BOT_TOKEN = process.env.TOKEN
- 
+
+// Function to check if a user is an admin
+async function isAdmin(chatId, userId) {
+  const res = await axios.get(
+    `https://api.telegram.org/bot${BOT_TOKEN}/getChatAdministrators?chat_id=${chatId}`
+  );
+  const admins = res.data.result;
+  return admins.some((admin) => admin.user.id === userId);
+}
+
+const groupId = 'YOUR_GROUP_ID';  // Example: -1001234567890
+const channelId = '@airdrops730';
+
 app.get("/", (req, res) => {
   res.render("home");
 });
-app.post(`/bot${BOT_TOKEN}`, (req, res) => {
+app.post(`/bot${BOT_TOKEN}`, async (req, res) => {
   const { message } = req.body;
+  // console.log(req.body);
+  
 
-  if (message) {
-      const chatId = message.chat.id;
-      const text = message.text;
+  if (message && message.chat.type === "supergroup" && message.entities) {
+    const chatId = message.chat.id;
+    const userId = message.from.id;
+    const messageId = message.message_id;
+    const username = message.from.username;
+    console.log(message);
 
-      // Echo back the received message
-      sendTextMessage(chatId, `You said: ${text}`)
-          .then(() => {
-              console.log(`Message sent to ${chatId}: ${text}`);
-              res.sendStatus(200);
-          })
-          .catch(error => {
-              console.error('Error sending message:', error);
-              res.sendStatus(500);
-          });
-  } else {
-      res.sendStatus(200);
+    // Check if the message contains a link
+    const containsLink = message.entities.some(
+      (entity) => entity.type === "url" || entity.type === "text_link"
+    );
+    // Link delete code
+    if (containsLink) {
+      try {
+        const userIsAdmin = await isAdmin(chatId, userId);
+
+        // Delete the message if the user is not an admin
+        if (userIsAdmin || message.forward_from_chat && message.forward_from_chat.username === channelId.slice(1)) {
+          console.log(
+            `Message with ID: ${messageId} from admin user: ${userId} not deleted`
+          );
+        
+        } else {
+          await axios.post(
+            `https://api.telegram.org/bot${BOT_TOKEN}/deleteMessage`,
+            {
+              chat_id: chatId,
+              message_id: messageId,
+            }
+          );
+          await axios.post(
+            `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`,
+            {
+              chat_id: chatId,
+              text: `Hey, @${username} Link Not Allow`,
+            }
+          );
+          console.log(
+            `Deleted message with ID: ${messageId} from user: ${userId}`
+          );
+        }
+      } catch (error) {
+        console.error(`Error deleting message: ${error.message}`);
+      }
+    }
   }
+
+  res.sendStatus(200);
 });
-
-
-
-// Function to send a text message
-function sendTextMessage(chatId, text) {
-  return axios.post(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
-      chat_id: chatId,
-      text: text
-  });
-}
-
-
 
 app.get("/editprofile", (req, res) => {
   res.render("editprofile");
 });
-app.post('/upload',upload.single('profilePic'),isLoggedIn, async (req,res)=>{
-  const filePath = req.file.path;
-  const fileBuffer = fs.readFileSync(filePath);
-  console.log(fileBuffer);
-  let user = await userModel.findOne({email: req.user.email})
+app.post(
+  "/upload",
+  upload.single("profilePic"),
+  isLoggedIn,
+  async (req, res) => {
+    const filePath = req.file.path;
+    const fileBuffer = fs.readFileSync(filePath);
+    console.log(fileBuffer);
+    let user = await userModel.findOne({ email: req.user.email });
 
-  user.profilepic ={
-    data:fileBuffer,
-    contentType: req.file.mimetype
+    user.profilepic = {
+      data: fileBuffer,
+      contentType: req.file.mimetype,
+    };
+
+    await user.save();
+    fs.unlinkSync(filePath);
+
+    res.send("Profile image uploaded successfully");
+    // res.json(req.file)
   }
-  
-  await user.save();
-  fs.unlinkSync(filePath);
-
-  res.send('Profile image uploaded successfully');
-// res.json(req.file)
-
-
-
-})
+);
 // app.post("/upload", isLoggedIn,upload.single('profilePic'), async (req, res) => {
 //   let user = await userModel.findOne({ email: req.user.email });
 //   user.profilepic = req.file.filename;
@@ -136,15 +170,18 @@ app.get("/chat", isLoggedIn, async (req, res) => {
         user: user._id,
         message: data,
       });
-      user.chats.push(chat._id); 
+      user.chats.push(chat._id);
       await user.save();
-      io.emit("msg", {data,user});
+      io.emit("msg", { data, user });
     });
   });
-  await chatModel.find().populate('user').then((messages) => {
-    // console.log(messages);
-    res.render("chat", { messages,user});
-  });
+  await chatModel
+    .find()
+    .populate("user")
+    .then((messages) => {
+      // console.log(messages);
+      res.render("chat", { messages, user });
+    });
 });
 app.get("/read/post", async (req, res) => {
   let allpost = await postModel.find();
@@ -239,4 +276,4 @@ function alreadyLoggedIn(req, res, next) {
 
 server.listen(process.env.PORT, (err) => {
   console.log("working server ");
-})
+});
