@@ -53,7 +53,7 @@ app.post(`/bot${BOT_TOKEN}`, async (req, res) => {
     const userId = message.from.id;
     const messageId = message.message_id;
     const username = message.from.username;
-    console.log(message);
+    // console.log(message);
 
     // Check if the message contains a link
     const containsLink = message.entities.some(
