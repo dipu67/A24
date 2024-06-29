@@ -17,7 +17,7 @@
                         alt="profileBackground">
                 </div>
                 <div id="profileImage">
-                    <img src="/images/logo.jpg"
+                    <img src="/images/<%= user.email %>"
                         alt="profile">
                     <div id="name">
                         name
@@ -63,11 +63,12 @@
             </div>
         </div>
 
-
+            <img src="/image/<%= user.email %>" alt="" width="150">
+            
 
     </div>
 
-    <script src="/javascripts/profile.js"></script>
+    <script src="/javascripts/profile.js"></script> 
 </body>
 
 </html>

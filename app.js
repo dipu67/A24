@@ -14,6 +14,7 @@ const postModel = require("./utils/post");
 const chatModel = require("./utils/chat");
 const setWebhook = require("./utils/setWebHook");
 const upload = require("./utils/multer");
+const handleMessage = require('./utils/handleMessage')
 // const TelegramBot = require('node-telegram-bot-api')
 
 const app = express();
@@ -28,78 +29,35 @@ app.use(express.static("public"));
 const BOT_TOKEN = process.env.TOKEN;
 
 
-// Function to check if a user is an admin
-async function isAdmin(chatId, userId) {
-  const res = await axios.get(
-    `https://api.telegram.org/bot${BOT_TOKEN}/getChatAdministrators?chat_id=${chatId}`
-  );
-  const admins = res.data.result;
-  return admins.some((admin) => admin.user.id === userId);
-}
 
-const groupId = 'YOUR_GROUP_ID';  // Example: -1001234567890
-const channelId = '@airdrops730';
-
-app.get("/", (req, res) => {
-  res.render("home");
+app.get("/",isHome, (req, res) => {
+  res.render("home",{user: req.user});
 });
 app.post(`/bot${BOT_TOKEN}`, async (req, res) => {
   const { message } = req.body;
-  // console.log(req.body);
+  // console.log(message);
+
+  if(message){
+    await handleMessage(message)
+  }
   
 
-  if (message && message.chat.type === "supergroup" && message.entities) {
-    const chatId = message.chat.id;
-    const userId = message.from.id;
-    const messageId = message.message_id;
-    const username = message.from.username;
-    // console.log(message);
-
-    // Check if the message contains a link
-    const containsLink = message.entities.some(
-      (entity) => entity.type === "url" || entity.type === "text_link"
-    );
-    // Link delete code
-    if (containsLink) {
-      try {
-        const userIsAdmin = await isAdmin(chatId, userId);
-
-        // Delete the message if the user is not an admin
-        if (userIsAdmin || message.forward_from_chat && message.forward_from_chat.username === channelId.slice(1)) {
-          console.log(
-            `Message with ID: ${messageId} from admin user: ${userId} not deleted`
-          );
-        
-        } else {
-          await axios.post(
-            `https://api.telegram.org/bot${BOT_TOKEN}/deleteMessage`,
-            {
-              chat_id: chatId,
-              message_id: messageId,
-            }
-          );
-          await axios.post(
-            `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`,
-            {
-              chat_id: chatId,
-              text: `Hey, @${username} Link Not Allow`,
-            }
-          );
-          console.log(
-            `Deleted message with ID: ${messageId} from user: ${userId}`
-          );
-        }
-      } catch (error) {
-        console.error(`Error deleting message: ${error.message}`);
-      }
-    }
-  }
-
+ 
   res.sendStatus(200);
 });
+ 
+app.get("/image/:email",async (req, res) => {
+  const email = req.params.email
+  let user = await userModel.findOne({email:email})
+    if (!user || !user.profilepic.data) {
+      return res.status(404).send('Image not found');
+    }
 
-app.get("/editprofile", (req, res) => {
-  res.render("editprofile");
+    res.contentType(user.profilepic.contentType);
+    res.send(user.profilepic.data);
+  });
+app.get("/editprofile",isLoggedIn, (req, res) => {
+  res.render("editprofile" ,{user: req.user});
 });
 app.post(
   "/upload",
@@ -135,7 +93,7 @@ app.get("/profile", isLoggedIn, async (req, res) => {
     let user = await userModel.findOne({ email: req.user.email });
     user.populate("posts");
     res.render("profile", { user });
-  } else {
+  } else { 
     res.redirect("/login");
   }
 });
@@ -145,7 +103,7 @@ app.get("/post", isLoggedIn, async (req, res) => {
   let post = await postModel.find().populate("user");
 
   // post.populate('user')
-  console.log(user);
+  console.log(req.user);
 
   res.render("post", { post, user });
 });
@@ -256,6 +214,23 @@ function isLoggedIn(req, res, next) {
 
   if (!authHeader) {
     return res.status(401).redirect("/login");
+  }
+
+  jwt.verify(authHeader, process.env.SECRETKEY, (err, user) => {
+    if (err) {
+      return res.status(403).json({ message: "Invalid or expired JWT" });
+    }
+    req.user = user; // Attach user info to request object
+    next();
+  });
+}
+
+function isHome(req, res, next) {
+  const authHeader = req.cookies.token;
+  // const token = authHeader && authHeader.split(" ")[1];
+
+  if (!authHeader) {
+    return res.status(401)  ,next();
   }
 
   jwt.verify(authHeader, process.env.SECRETKEY, (err, user) => {

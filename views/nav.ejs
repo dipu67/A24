@@ -26,9 +26,14 @@
                 <li><a href="/post">Post </a></li>
                 <li><a href="/chat">Chat </a></li>
                 <li><a href="#">More Soon</a></li>
-                <div id="loginBtn">
-                    <a href="/create"> Login</a>
-                </div>
+                <% if (user){%>
+                    <a href="/profile"> Profile</a>
+                    <% } else{%>
+                        <div id="loginBtn">
+                            <a href="/create"> Login</a>
+                        </div>
+                        
+                <%}%>
             </ul>
         </div>
         <i class="ri-menu-line"></i>
