@@ -8,6 +8,7 @@ const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
 const fs = require("fs");
 const axios = require("axios");
+const cors = require('cors');
 const port = process.env.PORT;
 const userModel = require("./utils/user");
 const postModel = require("./utils/post");
@@ -26,6 +27,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static("public"));
+app.use(cors());
 const BOT_TOKEN = process.env.TOKEN;
 
 
@@ -35,7 +37,7 @@ app.get("/",isHome, (req, res) => {
 });
 app.post(`/bot${BOT_TOKEN}`, async (req, res) => {
   const { message } = req.body;
-  // console.log(message);
+  console.log(message);
 
   if(message){
     await handleMessage(message)
@@ -48,7 +50,7 @@ app.post(`/bot${BOT_TOKEN}`, async (req, res) => {
  
 app.get("/image/:email",async (req, res) => {
   const email = req.params.email
-  let user = await userModel.findOne({email:email})
+  let user = await userModel.findOne({email:email}).exec()
     if (!user || !user.profilepic.data) {
       return res.status(404).send('Image not found');
     }
@@ -92,6 +94,7 @@ app.get("/profile", isLoggedIn, async (req, res) => {
   if (req.user) {
     let user = await userModel.findOne({ email: req.user.email });
     user.populate("posts");
+    // console.log(user);
     res.render("profile", { user });
   } else { 
     res.redirect("/login");
@@ -173,12 +176,38 @@ app.post("/register", async (req, res) => {
     });
   });
 });
+app.post("/app/register", async (req, res) => {
+  const { name, username, email, password } = req.body;
+  let user = await userModel.findOne({ email });
+  if (user) return res.send('Account is Already');
+
+  bcrypt.genSalt(10, (err, salt) => {
+    bcrypt.hash(password, salt, async (err, hash) => {
+      // Store hash in your password DB.
+      let user = await userModel.create({
+        name,
+        username,
+        email,
+        password: hash,
+      });
+      let token = jwt.sign(
+        { email: email, userid: user._id },
+        process.env.SECRETKEY
+      );
+      res.cookie("token", token);
+      res.json({token})
+    });
+  });
+});
+
+
 app.post("/login", async (req, res) => {
   const { email, password } = req.body;
   let user = await userModel.findOne({ email });
   if (!user) return res.redirect("/login");
 
-  bcrypt.compare(password, user.password, (err, result) => {
+  try {
+    bcrypt.compare(password, user.password, (err, result) => {
     if (result) {
       let token = jwt.sign(
         { email: email, userid: user._id },
@@ -188,7 +217,43 @@ app.post("/login", async (req, res) => {
       res.redirect("/profile");
     } else res.redirect("/login");
   });
+  } catch (error) {
+    console.log("login error:" + error);
+    
+  }
+  
 });
+app.post("/app/login", async (req, res) => {
+  const { email, password } = req.body;
+  console.log(email, password);
+
+  try {
+    let user = await userModel.findOne({ email: email });
+    if (!user) return res.status(404).json({ message: 'User not found' });
+
+    bcrypt.compare(password, user.password, (err, result) => {
+      if (err) return res.status(500).json({ message: 'Error comparing passwords' });
+
+
+    
+
+      if (result) {
+        let token = jwt.sign(
+          { email: email, userid: user._id },
+          process.env.SECRETKEY
+        );
+        // res.setHeader('Content-Type', 'application/json');
+        return res.status(200).json({ token });
+      } else {
+        return res.status(401).json({ message: 'Invalid credentials' });
+      }
+    });
+  } catch (error) {
+    console.error("Login error:", error);
+    return res.status(500).json({ message: 'Server error' });
+  }
+});
+
 app.post("/posts", isLoggedIn, async (req, res) => {
   const { data } = req.body;
   let user = await userModel.findOne({ email: req.user.email });
