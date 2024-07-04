@@ -100,6 +100,19 @@ app.get("/profile", isLoggedIn, async (req, res) => {
     res.redirect("/login");
   }
 });
+app.get("/app/user", appIsLoggedInd, async (req, res) => {
+  if (req.user) {
+    console.log(req.user);
+    let user = await userModel.findOne({ email: req.user.email });
+    user.populate("posts");
+    
+    res.json(user)
+    
+  } else { 
+    res.status(404).json('not user')
+  }
+});
+
 app.get("/post", isLoggedIn, async (req, res) => {
   let user = await userModel.findOne({ email: req.user.email });
 
@@ -272,6 +285,19 @@ app.get("/logout", (req, res) => {
   res.cookie("token", "", { expires: new Date(0) });
   res.redirect("/login");
 });
+
+function appIsLoggedInd(req,res,next){
+  const authHeader = req.headers['authorization'];
+  const token = authHeader
+  if (token == null) return res.sendStatus(401);
+
+  jwt.verify(token, process.env.SECRETKEY, (err, user) => {
+    if (err) return res.sendStatus(403);
+    req.user = user;
+    
+    next();
+  });
+}
 
 function isLoggedIn(req, res, next) {
   const authHeader = req.cookies.token;
