@@ -13,9 +13,9 @@ const port = process.env.PORT;
 const userModel = require("./utils/user");
 const postModel = require("./utils/post");
 const chatModel = require("./utils/chat");
-// const setWebhook = require("./utils/setWebHook");
+const setWebhook = require("./utils/setWebHook");
 const upload = require("./utils/multer");
-// const handleMessage = require('./utils/handleMessage');
+const handleMessage = require('./utils/handleMessage');
 const path = require("path");
 // const TelegramBot = require('node-telegram-bot-api')
 
