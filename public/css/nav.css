@@ -35,7 +35,10 @@ nav {
     object-position: center;
 
 }
-
+#rightNav{
+    display: block;
+    
+}
 #rightNav ul {
     display: flex;
     align-items: center;
@@ -70,60 +73,55 @@ nav {
     background-color: lightblue;
 }
 
-i {
-    font-size: 40px;
-    font-weight: 400;
+#menu{
     cursor: pointer;
     display: none;
     color: black;
+    transition: all ease-in 2s;
+}
+.line{
+    width: 30px;
+    height: 4px;
+    background-color: black;
+    margin-bottom: 6px;
+}
+.profile{
+    text-decoration: none;
+}
+.profile img{
+    width: 50px;
+    height: 100%;
+    border-radius: 50%;
 }
 
 @media screen and (max-width: 600px) {
-    nav {
-        overflow: visible;
-        transition: all 2s ease-out;
+    #menu{
+        display: block;
+        transition: all ease-in 2s;
     }
-
-    #rightNav {
+    #rightNav{
         position: absolute;
-        display: none;
+        top: 50px;
+        right: 0;
+        width: 200px;
         height: calc(100% - 50px);
-        width: 60%;
         background-color: rgba(255, 255, 255, 0.521);
         backdrop-filter: blur(5px);
-        top: 50px;
-        right: 0px;
-        z-index: 999;
+        display: none;
     }
-
     #rightNav ul {
-        /* display: none; */
-        display: flex;
         flex-direction: column;
-
     }
-
-    #rightNav ul li {
-        /* display: none; */
-        display: flex;
-        flex-direction: column;
-
+    #rightNav ul li{
+        padding: 5px;
     }
-
     #rightNav ul li a {
         font-size: 30px;
         color: black;
-        padding: 10px 15px;
-
+        padding: 0px 0px;
     }
-
-    #rightNav ul li a:hover {
-        background-color: rgba(0, 128, 0, 0.397);
-        backdrop-filter: blur(5px);
+    #loginBtn{
+        margin-top: 10px;
     }
-
-
-    i {
-        display: block;
-    }
+   
 }

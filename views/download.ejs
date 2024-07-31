@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Download A24 app</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+        }
+
+        #download-link {
+            margin-top: 50;
+            font-size: 20px;
+            color: blue;
+            text-decoration: none;
+            border: 1px solid blue;
+            padding: 10px 20px;
+            border-radius: 5px;
+        }
+
+        #indicator {
+            margin-top: 20px;
+            font-size: 18px;
+            color: green;
+            display: none;
+        }
+    </style>
+</head>
+89+
+<body>
+    <div id="main">
+        <%- include('nav',{user}) %>
+            <div id="download">
+                <a id="download-link" href="/apks/a24.apk" download>Download File</a>
+            </div>
+    </div>
+
+    <script>
+        document.getElementById('download-link').addEventListener('click', function () {
+            const indicator = document.getElementById('indicator');
+            indicator.style.display = 'none'; // Hide the indicator initially
+
+            // Create a new download element
+            const downloadLink = document.createElement('a');
+            downloadLink.href = this.href;
+            downloadLink.download = this.download;
+            document.body.appendChild(downloadLink);
+            downloadLink.click();
+            document.body.removeChild(downloadLink);
+
+            // Simulate the download complete indicator after a short delay
+            setTimeout(() => {
+                indicator.style.display = 'block';
+            }, 3000); // Adjust the delay as needed
+        });
+    </script>
+</body>
+
+</html>

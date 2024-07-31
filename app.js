@@ -13,9 +13,10 @@ const port = process.env.PORT;
 const userModel = require("./utils/user");
 const postModel = require("./utils/post");
 const chatModel = require("./utils/chat");
-const setWebhook = require("./utils/setWebHook");
+// const setWebhook = require("./utils/setWebHook");
 const upload = require("./utils/multer");
-const handleMessage = require('./utils/handleMessage')
+// const handleMessage = require('./utils/handleMessage');
+const path = require("path");
 // const TelegramBot = require('node-telegram-bot-api')
 
 const app = express();
@@ -47,7 +48,12 @@ app.post(`/bot${BOT_TOKEN}`, async (req, res) => {
  
   res.sendStatus(200);
 });
- 
+
+app.get('/airdrops',isLoggedIn, async(req,res)=>{
+  let user = await userModel.findOne({ email: req.user.email });
+  res.render('airdrops',{user})
+})
+
 app.get("/image/:email",async (req, res) => {
   const email = req.params.email
   let user = await userModel.findOne({email:email}).exec()
@@ -100,9 +106,22 @@ app.get("/profile", isLoggedIn, async (req, res) => {
     res.redirect("/login");
   }
 });
+app.get("/a24-app",   (req, res) => {
+  let user = 'download'
+  res.render('download',{user})
+
+});
+
+app.post('test',(req,res)=>{
+  axios.post('https://x.com').then((data)=>{
+    console.log(data);
+    res.json(data)
+  })
+})
+
 app.get("/app/user", appIsLoggedInd, async (req, res) => {
   if (req.user) {
-    console.log(req.user);
+    // console.log(req.user);
     let user = await userModel.findOne({ email: req.user.email });
     user.populate("posts");
     

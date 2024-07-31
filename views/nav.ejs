@@ -6,7 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nav</title>
     <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
-    <link rel="stylesheet" href="/stylesheetes/nav.css">
+    <link rel="stylesheet" href="/css/nav.css">
+    <link rel="shortcut icon" href="/images/logo.jpg" type="image/x-icon">
 
 
 <body>
@@ -21,13 +22,13 @@
 
         <div id="rightNav">
             <ul>
-                <li><a href="#">Home</a></li>
-                <li><a href="#">Airdrops</a></li>
+                <li><a href="/">Home</a></li>
+                <li><a href="/airdrops">Airdrops</a></li>
                 <li><a href="/post">Post </a></li>
                 <li><a href="/chat">Chat </a></li>
                 <li><a href="#">More Soon</a></li>
                 <% if (user){%>
-                    <a href="/profile"> Profile</a>
+                    <a href="/profile" class="profile"> <img src="/images/a24.png" alt="profile"></a>
                     <% } else{%>
                         <div id="loginBtn">
                             <a href="/create"> Login</a>
@@ -36,9 +37,13 @@
                 <%}%>
             </ul>
         </div>
-        <i class="ri-menu-line"></i>
+        <div id="menu">
+            <div class="line"></div>
+            <div class="line"></div>
+            <div class="line"></div>
+        </div>
     </nav>
-    <script src="/javascripts/nav.js"></script>
+    <script src="/js/nav.js"></script>
 </body>
 
 </html>
