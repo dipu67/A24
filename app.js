@@ -10,10 +10,10 @@ const fs = require("fs");
 const axios = require("axios");
 const cors = require('cors');
 const port = process.env.PORT;
-const userModel = require("./utils/user");
-const postModel = require("./utils/post");
-const chatModel = require("./utils/chat");
-const adminModel = require("./utils/admin");
+// const userModel = require("./utils/user");
+// const postModel = require("./utils/post");
+// const chatModel = require("./utils/chat");
+// const adminModel = require("./utils/admin");
 const setWebhook = require("./utils/setWebHook");
 const upload = require("./utils/multer");
 const handleMessage = require('./utils/handleMessage');
@@ -56,19 +56,24 @@ app.post("/a24bot", async(req, res) => {
       const fileUrl =await axios.get(`${url}getUserProfilePhotos?user_id=${initData.user.id}`
       );
       const fileId = fileUrl.data.result.photos[0]
+      console.log(fileUrl);
+      
       
 
       if(fileId){
         const filename = fileId[fileId.length - 1]
         const file =await axios.get(`${url}getFile?file_id=${filename.file_id}`
         );
+        // console.log(file);
+        
       
         
         if(file){
           filePath = file.data.result.file_path
           
-          const profile =`${url}${filePath}`
-          log
+          const profile =`https://api.telegram.org/file/bot${BOT_TOKEN}/${filePath}`
+          
+          
           res.json({success:true, user:initData.user,param:initData.startParam,profile:profile})
         }
       }
