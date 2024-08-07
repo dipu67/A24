@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A24 Bot</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css" rel="stylesheet" />
+    <link rel="stylesheet" href="./css/a24.css">
+
+</head>
+<body>
+   <div id="main">
+    <div id="user-info">
+        <div id="profile">
+            <img id="profileimg" alt="profile">
+        </div>
+        <p style="color: white;" class="userName"></p>
+    </div>
+    <!-- <button id="ad">Show ad</button> -->
+     
+    
+    <div class="HomeContent content active "  id="Home">
+        <h1>Home</h1>
+    </div>
+    <div class="EarnContent content" id="Earn">
+        <h1>Earn money</h1>
+    </div>
+    <div class="ChatContent content" id="Chat">
+        <h1>Chat me</h1>
+    </div>
+    <div class="ProfileContent content" id="Profile">
+        <h1>This is profile</h1>
+    </div>
+
+    <div id="TapContainer">
+        <div class="homeTab Tab active" data-Tab="Home">
+            <i class="ri-home-5-line"></i>
+        </div>
+        <div class="earnTab Tab" data-Tab="Earn">
+            <i class="ri-money-dollar-circle-fill"></i>
+        </div>
+        <div class="chatBar Tab" data-Tab="Chat">
+            <i class="ri-chat-3-line"></i>
+        </div>
+        <div class="profileTab Tab" data-Tab="Profile">
+            <i class="ri-user-line" ></i>
+        </div>
+
+     </div>
+   </div>
+   <div id="loading-screen">
+    <div class="spinner"></div>
+  </div>
+
+   <script src="/js/a24.js"></script>
+</body>
+</html>

@@ -42,15 +42,16 @@ async function isAdmin(chatId, userId) {
 // }
 
 const message = async function handleMessage(message) {
-
   if (message && message.chat.type === "private") {
     const chatId = message.chat.id;
     const userId = message.from.id;
     const messageId = message.message_id;
     const username = message.from.username;
     const text = message.text;
-
+    const welcomeGif =
+        "CgACAgQAAx0Cav2aHQACSmlmFQT23OUYpxTbdFyurDxpi4jIJwACgwUAApoxBVB7Ywrb6zjyVDQE";
     if (text === "/start") {
+      console.log(text);
       try {
         let user = await botUser.findOne({ userId: userId });
 
@@ -62,9 +63,21 @@ const message = async function handleMessage(message) {
             userName: username,
           });
         }
-        await axios.post(`${telegramUrl}/sendMessage`, {
+        await axios.post(`${telegramUrl}/sendAnimation`, {
           chat_id: chatId,
-          text: `welcome to A24 Bot`,
+          animation: welcomeGif,
+          caption: `Hey,@${username} Welcome to A24 mini app`,
+          reply_markup: {
+            inline_keyboard: [
+              [
+                {
+                  text: "Open A24 App",
+                  url: "https://t.me/Airdrops24_bot/A24",
+                },
+              ],
+              [{ text: "Join the community", url: "https://t.me/A24_Army" }],
+            ],
+          },
         });
       } catch (error) {
         console.log(error);
@@ -80,11 +93,9 @@ const message = async function handleMessage(message) {
     const text = message.text;
     const links = message.entities;
 
-    // console.log(text);
-
     if (message.new_chat_member) {
-      const welcomeGif ="CgACAgQAAx0Cav2aHQACSmlmFQT23OUYpxTbdFyurDxpi4jIJwACgwUAApoxBVB7Ywrb6zjyVDQE";
-      
+      const welcomeGif =
+        "CgACAgQAAx0Cav2aHQACSmlmFQT23OUYpxTbdFyurDxpi4jIJwACgwUAApoxBVB7Ywrb6zjyVDQE";
 
       await axios.post(`${telegramUrl}/sendAnimation`, {
         chat_id: chatId,
@@ -122,14 +133,16 @@ const message = async function handleMessage(message) {
       );
       // Link delete code
       if (containsLink) {
-
         try {
-          const NotAllow = "CgACAgQAAx0Cav2aHQACXjFmf-t_d-_9PIH8kwPDhTNfRbkfoQACLQMAAqRbFVNvGrZIsJrnhjUE"
+          const NotAllow =
+            "CgACAgQAAx0Cav2aHQACXjFmf-t_d-_9PIH8kwPDhTNfRbkfoQACLQMAAqRbFVNvGrZIsJrnhjUE";
           const userIsAdmin = await isAdmin(chatId, userId);
 
           // Delete the message if the user is not an admin
           if (
-            userIsAdmin || message.forward_from_chat && message.forward_from_chat.username === channelId.slice(1)
+            userIsAdmin ||
+            (message.forward_from_chat &&
+              message.forward_from_chat.username === channelId.slice(1))
           ) {
             console.log(
               `Message with ID: ${messageId} from admin user: ${userId} not deleted`

@@ -5,16 +5,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile</title>
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css" rel="stylesheet" />
     <link rel="stylesheet" href="/css/profile.css">
 </head>
 
 <body>
-    <div id="main">
+    <div id="main"> 
         <%- include('nav') %>
+
             <div id="profile">
                 <div id="profileBackground">
-                    <img src="/images/notcoin.jpg"
-                        alt="profileBackground">
+                    <img src="/images/notcoin.jpg" alt="profileBackground">
                 </div>
                 <div id="profileData">
                     <div id="profileImage">
@@ -28,10 +29,27 @@
                         <%= user.username %>
                     </div>
                     <div id="editProfile">
-                        <button> <a href="/editprofile">Edit Profile</a></button>
+                        <button id="editprofileBtn"> Edit Profile</button>
                     </div>
                 </div>
 
+            </div>
+
+            <div id="editprofileContainer">
+
+                <div class="editinfo"> 
+                    <div class="close">
+                        <i class="ri-close-large-line "  ></i>
+
+                    </div>
+
+                    <h1>Update profile image</h1>
+                    <!-- <img src="/images/upload.png" alt="upload"> -->
+                    <form action="/upload" method="post" enctype="multipart/form-data">
+                        <input type="file" name="profilePic" id="profilePic" accept="/images/upload.png" required>
+                        <input type="submit" value="Update">
+                    </form>
+                </div>
             </div>
 
             <div class="tab-container">
@@ -73,7 +91,7 @@
                 </div>
             </div>
 
-            <img src="/image/<%= user.email %>" alt="" width="150">
+
 
 
     </div>

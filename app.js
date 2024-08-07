@@ -10,17 +10,23 @@ const fs = require("fs");
 const axios = require("axios");
 const cors = require('cors');
 const port = process.env.PORT;
-const userModel = require("./utils/user");
-const postModel = require("./utils/post");
-const chatModel = require("./utils/chat");
+// const userModel = require("./utils/user");
+// const postModel = require("./utils/post");
+// const chatModel = require("./utils/chat");
+// const adminModel = require("./utils/admin");
 const setWebhook = require("./utils/setWebHook");
 const upload = require("./utils/multer");
 const handleMessage = require('./utils/handleMessage');
+const {db,storage} = require('./utils/firebase')
 const path = require("path");
 // const TelegramBot = require('node-telegram-bot-api')
+const downloadFile = require('./utils/storage');
+const { ref, uploadBytes, getDownloadURL } = require("firebase/storage");
+const {collection,addDoc,getDocs} = require('firebase/firestore')
+const {validate,parse} = require('@telegram-apps/init-data-node')
 
 const app = express();
-const server = http.createServer(app);
+const server = http.createServer(app); 
 const io = socket(server);
 
 app.set("view engine", "ejs");
@@ -30,25 +36,105 @@ app.use(cookieParser());
 app.use(express.static("public"));
 app.use(cors());
 const BOT_TOKEN = process.env.TOKEN;
-
-
-
+ 
+// console.log(db);
 app.get("/",isHome, (req, res) => {
   res.render("home",{user: req.user});
 });
+app.get("/a24", (req, res) => {
+  res.render('a24');
+});
+app.post("/a24bot", async(req, res) => {
+  const authHeader = req.headers.authorization
+  const [authType, authData] = authHeader.split(' ')
+  if(authType === 'tma'){
+    const url = `https://api.telegram.org/bot${BOT_TOKEN}/`
+    try {
+      validate(authData,BOT_TOKEN)
+      const initData = parse(authData)
+      // console.log(initData);
+      const url =await axios.get(`${url}getUserProfilePhotos?user_id=${initData.user.id}`
+      );
+      const fileId = url.data.result.photos[0]
+      
+
+      if(fileId){
+        const filename = fileId[fileId.length - 1]
+        const file =await axios.get(`${url}getFile?file_id=${filename.file_id}`
+        );
+      
+        
+        if(file){
+          filePath = file.data.result.file_path
+          
+          const profile =`${url}${filePath}`
+          
+          res.json({success:true, user:initData.user,param:initData.startParam,profile:profile})
+        }
+      }
+    
+    } catch (error) {
+      res.status(401).json({success:false})
+      
+    }  
+  }
+});
+app.post("/test", (req, res) => {
+ console.log( req.body)
+
+  res.send('hey')
+   
+});
+app.get("/admin",isAdmin, (req, res) => {
+  res.render("admin/admin");
+});
+app.get("/adadmin", (req, res) => {
+  adminModel.create({
+    name:"Dipu",
+    username:"Dipu",
+    email:'dipu@gmail.com'
+  })
+  res.send("admin Added");
+});
+app.get("/read",async (req, res) => {
+  try {
+    const querySnapshot = await getDocs(collection(db, 'users'));
+    // res.json(querySnapshot)
+    console.log(querySnapshot.data);
+
+    querySnapshot.forEach((doc) => {
+      // console.log(`${doc.id} => ${JSON.stringify(doc.data())}`);
+    });
+  } catch (e) {
+    console.error('Error getting documents: ', e);
+  }
+  
+  res.send("check consoel");
+}); 
+app.get("/aduser",async (req, res) => {
+  try {
+    const docRef = await addDoc(collection(db, 'users'), {
+      name: 'John Doe',
+      email: 'john.doe@example.com',
+      age: 30
+    });
+    console.log('Document written with ID: ', docRef.id);
+  } catch (e) {
+    console.error('Error adding document: ', e);
+  }
+  
+  res.send("check consoel");
+}); 
+
 app.post(`/bot${BOT_TOKEN}`, async (req, res) => {
   const { message } = req.body;
-  console.log(message);
 
   if(message){
     await handleMessage(message)
   }
-  
-
- 
   res.sendStatus(200);
 });
-
+ 
 app.get('/airdrops',isLoggedIn, async(req,res)=>{
   let user = await userModel.findOne({ email: req.user.email });
   res.render('airdrops',{user})
@@ -68,24 +154,21 @@ app.get("/editprofile",isLoggedIn, (req, res) => {
   res.render("editprofile" ,{user: req.user});
 });
 app.post(
-  "/upload",
+  "/upload", 
   upload.single("profilePic"),
   isLoggedIn,
   async (req, res) => {
-    const filePath = req.file.path;
-    const fileBuffer = fs.readFileSync(filePath);
-    console.log(fileBuffer);
-    let user = await userModel.findOne({ email: req.user.email });
+    const file = req.file;
+    // const fileBuffer = fs.readFileSync(filePath);
+    const fileName = `${Date.now()}_${file.originalname}`
+    const storageRef = ref(storage,`profile/${fileName}`)
+    const snapshot = await uploadBytes(storageRef,file.buffer,{contentType:file.mimetype})
+    const downloadurl = await getDownloadURL(snapshot.ref)
+    console.log(downloadurl);
 
-    user.profilepic = {
-      data: fileBuffer,
-      contentType: req.file.mimetype,
-    };
+   
 
-    await user.save();
-    fs.unlinkSync(filePath);
-
-    res.send("Profile image uploaded successfully");
+    res.status(200).redirect('/profile');
     // res.json(req.file)
   }
 );
@@ -318,6 +401,26 @@ function appIsLoggedInd(req,res,next){
   });
 }
 
+function isAdmin(req, res, next) {
+  const authHeader = req.cookies.token;
+  // const token = authHeader && authHeader.split(" ")[1];
+
+  if (!authHeader) {
+    return res.status(401).redirect("/");
+  }
+
+  jwt.verify(authHeader, process.env.SECRETKEY, async (err, user) => {
+    if (err) {
+      return res.status(403).json({ message: "Invalid or expired JWT" });
+    }
+    // req.user = user; // Attach user info to request object
+    admin = await adminModel.findOne({email: user.email})
+    if(!admin){
+      return res.status(403).redirect('/');
+    }
+    next();
+  });
+}
 function isLoggedIn(req, res, next) {
   const authHeader = req.cookies.token;
   // const token = authHeader && authHeader.split(" ")[1];
@@ -331,6 +434,7 @@ function isLoggedIn(req, res, next) {
       return res.status(403).json({ message: "Invalid or expired JWT" });
     }
     req.user = user; // Attach user info to request object
+    console.log(user);
     next();
   });
 }

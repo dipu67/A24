@@ -4,7 +4,9 @@ require("dotenv").config();
 // Connect to MongoDB Atlas
 mongoose.connect(process.env.DATABASE).then(() => {
   console.log("connected User");
-});
+}).catch((err)=>{
+  console.log("connecting error :"+ err);
+})
 
 const userSchema = mongoose.Schema({
   name: String,

@@ -1,15 +1,15 @@
 const nav = document.querySelector("#rightNav");
 const menu = document.querySelector("#menu");
-const main = document.querySelector("#main")
+const main = document.querySelector("#main");
 let toogle = false;
 menu.addEventListener("click", () => {
   if (toogle === false) {
-    nav.style.display = "block";
+    nav.style.width = "200px";
     toogle = true;
-} else {
-      
-      nav.style.display = "none";
+  } else {
+    nav.style.width = "0";
     toogle = false;
   }
 });
-console.log(addEventListener);
+
+

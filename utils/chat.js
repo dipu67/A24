@@ -4,7 +4,9 @@ require("dotenv").config();
 // Connect to MongoDB Atlas
 mongoose.connect(process.env.DATABASE).then(() => {
   console.log("connected Chat");
-});  
+}).catch((err)=>{
+  console.log("connecting error :"+ err);
+}) 
 
 const chatSchema = mongoose.Schema({
   user:[{
