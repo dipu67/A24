@@ -10,11 +10,11 @@ const fs = require("fs");
 const axios = require("axios");
 const cors = require('cors');
 const port = process.env.PORT;
-const userModel = require("./utils/user");
-const postModel = require("./utils/post");
-const chatModel = require("./utils/chat");
-const adminModel = require("./utils/admin");
-const setWebhook = require("./utils/setWebHook");
+// const userModel = require("./utils/user");
+// const postModel = require("./utils/post");
+// const chatModel = require("./utils/chat");
+// const adminModel = require("./utils/admin");
+// const setWebhook = require("./utils/setWebHook");
 const upload = require("./utils/multer");
 const handleMessage = require('./utils/handleMessage');
 const {db,storage} = require('./utils/firebase')
@@ -48,14 +48,14 @@ app.post("/a24bot", async(req, res) => {
   const authHeader = req.headers.authorization
   const [authType, authData] = authHeader.split(' ')
   if(authType === 'tma'){
-    const url = `https://api.telegram.org/bot${BOT_TOKEN}/`
     try {
+      const url = `https://api.telegram.org/bot${BOT_TOKEN}/`
       validate(authData,BOT_TOKEN)
       const initData = parse(authData)
       // console.log(initData);
-      const url =await axios.get(`${url}getUserProfilePhotos?user_id=${initData.user.id}`
+      const fileUrl =await axios.get(`${url}getUserProfilePhotos?user_id=${initData.user.id}`
       );
-      const fileId = url.data.result.photos[0]
+      const fileId = fileUrl.data.result.photos[0]
       
 
       if(fileId){
@@ -68,7 +68,7 @@ app.post("/a24bot", async(req, res) => {
           filePath = file.data.result.file_path
           
           const profile =`${url}${filePath}`
-          
+          log
           res.json({success:true, user:initData.user,param:initData.startParam,profile:profile})
         }
       }
