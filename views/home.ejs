@@ -7,6 +7,9 @@
     <title>A24 | Home </title>
     <link rel="stylesheet" href="/css/home.css">
     <link rel="shortcut icon" href="/images/A24.png" type="image/x-icon">
+    <style>
+
+    </style>
 
 </head>
 
@@ -15,6 +18,9 @@
         <%- include('nav',{user}) %>
             <!-- <h1>Home</h1>
         <p><%= user %></p>  -->
+            <div id="popup" class="popup">
+                <p>login sucssec</p>
+            </div>
             <div id="container">
                 <div id="propuler">
                     <h1>
@@ -161,17 +167,31 @@
                                 </div>
                             </div>
                         </div>
-                       
+
 
                     </div>
                 </div>
-                
-                  
+
+                <div id="url">open Profile</div>
+
+
 
             </div>
             <%- include('footer') %>
     </div>
-    
+    <script>
+        const main = document.getElementById('main')
+        document.querySelector('#url').addEventListener('click', () => {
+            document.getElementById('popup').classList.add('showpopup')
+            setTimeout(()=>{
+                document.getElementById('popup').classList.remove('showpopup')
+
+            },1000)
+
+
+        })
+
+    </script>
 </body>
 
 </html>

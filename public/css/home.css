@@ -76,6 +76,21 @@ body {
     text-wrap: wrap;
     font-size: 18px;
 }
+.popup{
+  position: fixed;
+  top: 20px;
+  right: -500px;
+  width: 250px;
+  padding: 20px;
+  background-color: #4CAF50;
+  color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: right 0.5s ease;
+}
+.showpopup{
+  right: 20px;
+}
 @media screen and (min-width: 600px) {
   ::-webkit-scrollbar {
     width: 0;

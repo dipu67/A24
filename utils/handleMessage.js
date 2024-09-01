@@ -40,6 +40,22 @@ async function isAdmin(chatId, userId) {
 //     console.error('Error muting user:', error.message);
 //   }
 // }
+async function user() {
+  // let user = await botUser.find();
+  // console.log(user);
+
+  await axios.post(`${telegramUrl}/sendMessage`, {
+    chat_id: "@A24_Army",
+    text: `Hello A24 User  `,
+  });
+  // user.forEach( async user => {
+  //   // let userName = user.userName
+  //   // console.log(userName.toString());
+
+  // });
+}
+
+// user()
 
 const message = async function handleMessage(message) {
   if (message && message.chat.type === "private") {
@@ -48,10 +64,26 @@ const message = async function handleMessage(message) {
     const messageId = message.message_id;
     const username = message.from.username;
     const text = message.text;
+    // console.log(message);
+
+    // send image bot to group
+    // fileId = message.photo[message.photo.length - 1].file_id;
+    // const file = await axios.get(`${telegramUrl}/getFile?file_id=${fileId}`);
+    // const filePath = file.data.result.file_path;
+    // console.log(filePath);
+    // const image = `https://api.telegram.org/file/bot${BOT_TOKEN}/${filePath}`;
+    // console.log(image);
+
+    // await axios.post(`${telegramUrl}/sendPhoto`, {
+    //   chat_id: userId,
+    //   photo: `${image}`,
+    //   caption: "Testing bot for A24 Group",
+    // });
+
     const welcomeGif =
-        "CgACAgQAAx0Cav2aHQACSmlmFQT23OUYpxTbdFyurDxpi4jIJwACgwUAApoxBVB7Ywrb6zjyVDQE";
+      "CgACAgQAAx0Cav2aHQACSmlmFQT23OUYpxTbdFyurDxpi4jIJwACgwUAApoxBVB7Ywrb6zjyVDQE";
+
     if (text === "/start") {
-      console.log(text);
       try {
         let user = await botUser.findOne({ userId: userId });
 
@@ -83,6 +115,21 @@ const message = async function handleMessage(message) {
         console.log(error);
       }
     }
+    if (text === "/profile@Airdrops24_bot") {
+      try {
+        await axios.post(
+          `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`,
+          {
+            chat_id: chatId,
+            text: `Hello,Welcome to A24.\n Your profile Detail 👇\n Name: ${message.from.first_name} \n Username: ${username? '@'+username:'[ইউজারনেম সেট করুন](tg://settings)'} \n UserId: ${userId} `,
+            reply_to_message_id: message.message_id,
+            parse_mode:'Markdown',
+          }
+        );
+      } catch (error) {
+        console.error("Error sending message:", error);
+      }
+    }
   }
 
   if (message && message.chat.type === "supergroup") {
@@ -93,6 +140,26 @@ const message = async function handleMessage(message) {
     const text = message.text;
     const links = message.entities;
 
+    console.log(message);
+    
+
+
+    if (text === "/profile@Airdrops24_bot") {
+      try {
+        await axios.post(
+          `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`,
+          {
+            chat_id: chatId,
+            text: `Hello,Welcome to A24.\n Your profile Detail 👇\n Name: ${message.from.first_name} \n Username: ${username? '@'+username:'[ইউজারনেম সেট করুন](tg://settings)'} \n UserId: ${userId} `,
+            reply_to_message_id: message.message_id,
+            parse_mode:'Markdown',
+          }
+        );
+      } catch (error) {
+        console.error("Error sending message:", error);
+      }
+    }
+
     if (message.new_chat_member) {
       const welcomeGif =
         "CgACAgQAAx0Cav2aHQACSmlmFQT23OUYpxTbdFyurDxpi4jIJwACgwUAApoxBVB7Ywrb6zjyVDQE";
@@ -100,7 +167,7 @@ const message = async function handleMessage(message) {
       await axios.post(`${telegramUrl}/sendAnimation`, {
         chat_id: chatId,
         animation: welcomeGif,
-        caption: `Welcome to the *${message.chat.title}* group, @${message.new_chat_member.username}`,
+        caption: `Welcome to the *${message.chat.title}* group, ${message.new_chat_member.username ? '@'+message.new_chat_member.username : message.new_chat_member.first_name + ' [ইউজারনেম সেট করুন](tg://settings)' }`,
         reply_markup: {
           inline_keyboard: [
             [{ text: "Channel", url: "https://t.me/A24_Army" }],

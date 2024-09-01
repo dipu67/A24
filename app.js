@@ -1,4 +1,4 @@
-require("dotenv").config();
+ 
 const express = require("express");
 const socket = require("socket.io");
 const http = require("http");
@@ -17,7 +17,6 @@ const port = process.env.PORT;
 const setWebhook = require("./utils/setWebHook");
 const upload = require("./utils/multer");
 const handleMessage = require('./utils/handleMessage');
-const {db,storage} = require('./utils/firebase')
 const path = require("path");
 // const TelegramBot = require('node-telegram-bot-api')
 const downloadFile = require('./utils/storage');
@@ -25,9 +24,9 @@ const { ref, uploadBytes, getDownloadURL } = require("firebase/storage");
 const {collection,addDoc,getDocs} = require('firebase/firestore')
 const {validate,parse} = require('@telegram-apps/init-data-node')
 
-const app = express();
+const app = express(); 
 const server = http.createServer(app); 
-const io = socket(server);
+const socketio = socket(server);
 
 app.set("view engine", "ejs");
 app.use(express.json());
@@ -36,15 +35,55 @@ app.use(cookieParser());
 app.use(express.static("public"));
 app.use(cors());
 const BOT_TOKEN = process.env.TOKEN;
- 
+const io = socketio.of('/a24');
+let onlineUsers = 0;
+let online = []
+io.on('connection', (socket) => {
+  onlineUsers++;
+  // console.log(`A user connected. Online users: ${onlineUsers}`);
+  
+  io.emit('onlineUsers', onlineUsers);
+  socket.on('user',(user)=>{
+    online.push(user)
+    // console.log(online);
+    
+    io.emit('userData',online)
+    // console.log(user);
+    socket.on('disconnect',()=>{
+      online.indexOf(user)
+      delete online[online.indexOf(user)]
+      
+    })
+    
+    
+  })
+
+  socket.on('disconnect', () => {
+    onlineUsers--;
+    
+    // console.log(`A user disconnected. Online users: ${onlineUsers}`);
+    
+    io.emit('onlineUsers', onlineUsers);
+  });
+});
+
 // console.log(db);
 app.get("/",isHome, (req, res) => {
   res.render("home",{user: req.user});
 });
+app.get('/testmode',(req,res)=>{
+  res.render('testmode')
+})
+app.get('/result',(req,res)=>{
+  res.render('result')
+})
+
 app.get("/a24", (req, res) => {
+
   res.render('a24');
 });
 app.post("/a24bot", async(req, res) => {
+  
   const authHeader = req.headers.authorization
   const [authType, authData] = authHeader.split(' ')
   if(authType === 'tma'){
@@ -56,7 +95,6 @@ app.post("/a24bot", async(req, res) => {
       const fileUrl =await axios.get(`${url}getUserProfilePhotos?user_id=${initData.user.id}`
       );
       const fileId = fileUrl.data.result.photos[0]
-      console.log(fileUrl);
       
       
 
@@ -73,7 +111,7 @@ app.post("/a24bot", async(req, res) => {
           
           const profile =`https://api.telegram.org/file/bot${BOT_TOKEN}/${filePath}`
           
-          
+          users = initData.user
           res.json({success:true, user:initData.user,param:initData.startParam,profile:profile})
         }
       }
@@ -140,8 +178,10 @@ app.post(`/bot${BOT_TOKEN}`, async (req, res) => {
   res.sendStatus(200);
 });
  
-app.get('/airdrops',isLoggedIn, async(req,res)=>{
-  let user = await userModel.findOne({ email: req.user.email });
+
+app.get('/airdrops', async(req,res)=>{
+  // let user = await userModel.findOne({ email: req.user.email });
+  let user
   res.render('airdrops',{user})
 })
 

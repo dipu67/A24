@@ -23,19 +23,19 @@
                     <!-- Messages will be dynamically populated here -->
 
                     <ul id="msgList">
-                            <% messages.forEach(function(message) { %>
+                        <% messages.forEach(function(message) { %>
 
-                                <% message.user.forEach(function(user){%>
-                            <li class="<% if(user.username)? ".sent" : """>
+                            <% message.user.forEach(function(user){%>
+                        <li class="<% if(user.username)? ".sent" : """>
+                                <p>
+                                    <%=user.name %>:
+                                </p>
+                                <%})%>
                                     <p>
-                                        <%=user.name %>:
+                                        <%= message.message %>
                                     </p>
-                                    <%})%>
-                                        <p>
-                                            <%= message.message %>
-                                        </p>
-                            </li>
-                            <% }) %>
+                        </li>
+                        <% }) %>
                         </ul>
                         
                 </div>

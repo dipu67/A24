@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test mode </title>
+</head>
+<body>
+    <div id="content">
+
+        <h1>this is test mode content </h1>
+    </div>
+    <button id="load-more">Load More Content</button>
+    <script>
+document.getElementById('load-more').addEventListener('click', function() {
+    fetch('/airdrops')
+        .then(response => response.text())
+        .then(html => {
+            document.getElementById('content').innerHTML = html;
+        })
+        .catch(err => console.error('Error:', err));
+});
+    </script>
+</body>
+</html>

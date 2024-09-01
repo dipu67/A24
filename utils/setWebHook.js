@@ -1,11 +1,12 @@
 // setWebhook.js
-
+require("dotenv").config();
 const axios = require('axios');
 
 const BOT_TOKEN = process.env.TOKEN; // Replace with your bot token
+// const WEBHOOK_URL = 'https://a24.fun/bot' + BOT_TOKEN; // Replace with your HTTPS URL
 const WEBHOOK_URL = 'https://a24.fun/bot' + BOT_TOKEN; // Replace with your HTTPS URL
-// const WEBHOOK_URL = 'https://4453-103-131-146-78.ngrok-free.app/bot' + BOT_TOKEN; // Replace with your HTTPS URL
 // Function to set the webhook
+
 async function setWebhook() {
     try {
         const response = await axios.post(`https://api.telegram.org/bot${BOT_TOKEN}/setWebhook`, {

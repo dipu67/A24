@@ -8,6 +8,7 @@
     <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css" rel="stylesheet" />
     <link rel="stylesheet" href="./css/a24.css">
+    <script src="/socket.io/socket.io.js"></script>
 
 </head>
 <body>
@@ -15,21 +16,35 @@
     <div id="user-info">
         <div id="profile">
             <img id="profileimg" alt="profile">
+            <p style="color: white; font-weight: 600;" class="userName"></p>
         </div>
-        <p style="color: white;" class="userName"></p>
+        <p style="color: white; font-size: small;">Online:<span id="online-users">0</span></p>
     </div>
     <!-- <button id="ad">Show ad</button> -->
      
-    
+    <!-- Home page -->
     <div class="HomeContent content active "  id="Home">
         <h1>Home</h1>
+        <div id="users">
+
+        </div>
     </div>
+    <!-- earn page -->
     <div class="EarnContent content" id="Earn">
         <h1>Earn money</h1>
     </div>
+    <!-- Chat page -->
     <div class="ChatContent content" id="Chat">
-        <h1>Chat me</h1>
+        <div id="online-users-show">
+            <h1>Online Users</h1>
+            <div class="profile-container">
+                <!-- <img class="active-profile" alt=""> -->
+                <div class="active-icon"></div>
+            </div>
+
+        </div>
     </div>
+    <!-- Profile page -->
     <div class="ProfileContent content" id="Profile">
         <h1>This is profile</h1>
     </div>
