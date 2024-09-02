@@ -18,10 +18,7 @@ const setWebhook = require("./utils/setWebHook");
 const upload = require("./utils/multer");
 const handleMessage = require('./utils/handleMessage');
 const path = require("path");
-// const TelegramBot = require('node-telegram-bot-api')
 const downloadFile = require('./utils/storage');
-const { ref, uploadBytes, getDownloadURL } = require("firebase/storage");
-const {collection,addDoc,getDocs} = require('firebase/firestore')
 const {validate,parse} = require('@telegram-apps/init-data-node')
 
 const app = express(); 
