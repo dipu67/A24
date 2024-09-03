@@ -23,7 +23,7 @@ const {validate,parse} = require('@telegram-apps/init-data-node')
 
 const app = express(); 
 const server = http.createServer(app); 
-const socketio = socket(server);
+const io = socket(server);
 
 app.set("view engine", "ejs");
 app.use(express.json());
@@ -32,37 +32,6 @@ app.use(cookieParser());
 app.use(express.static("public"));
 app.use(cors());
 const BOT_TOKEN = process.env.TOKEN;
-const io = socketio.of('/a24');
-let onlineUsers = 0;
-let online = []
-io.on('connection', (socket) => {
-  onlineUsers++;
-  // console.log(`A user connected. Online users: ${onlineUsers}`);
-  
-  io.emit('onlineUsers', onlineUsers);
-  socket.on('user',(user)=>{
-    online.push(user)
-    // console.log(online);
-    
-    io.emit('userData',online)
-    // console.log(user);
-    socket.on('disconnect',()=>{
-      online.indexOf(user)
-      delete online[online.indexOf(user)]
-      
-    })
-    
-    
-  })
-
-  socket.on('disconnect', () => {
-    onlineUsers--;
-    
-    // console.log(`A user disconnected. Online users: ${onlineUsers}`);
-    
-    io.emit('onlineUsers', onlineUsers);
-  });
-});
 
 // console.log(db);
 app.get("/",isHome, (req, res) => {
@@ -75,10 +44,7 @@ app.get('/result',(req,res)=>{
   res.render('result')
 })
 
-app.get("/a24", (req, res) => {
 
-  res.render('a24');
-});
 app.post("/a24bot", async(req, res) => {
   
   const authHeader = req.headers.authorization
