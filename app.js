@@ -10,16 +10,15 @@ const fs = require("fs");
 const axios = require("axios");
 const cors = require('cors');
 const port = process.env.PORT;
-const userModel = require("./utils/user");
-const postModel = require("./utils/post");
-const chatModel = require("./utils/chat");
-const adminModel = require("./utils/admin");
+// const userModel = require("./utils/user");
+// const postModel = require("./utils/post");
+// const chatModel = require("./utils/chat");
+// const adminModel = require("./utils/admin");
 const setWebhook = require("./utils/setWebHook");
 const upload = require("./utils/multer");
 const handleMessage = require('./utils/handleMessage');
 const path = require("path");
-const downloadFile = require('./utils/storage');
-const {validate,parse} = require('@telegram-apps/init-data-node')
+// const {validate,parse} = require('@telegram-apps/init-data-node')
 
 const app = express(); 
 const server = http.createServer(app); 
@@ -30,7 +29,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static("public"));
-app.use(cors());
+app.use(cors()); 
 const BOT_TOKEN = process.env.TOKEN;
 
 // console.log(db);
