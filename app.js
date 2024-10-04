@@ -27,7 +27,7 @@ const io = socket(server);
 app.set("view engine", "ejs");
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
+app.use(cookieParser());   
 app.use(express.static("public"));
 app.use(cors()); 
 const BOT_TOKEN = process.env.TOKEN;
